@@ -42,11 +42,9 @@ module fifo(
   
   always @ (posedge clk) begin
     if (rst)begin
-     // for (int i = 0; i < 8; i++)begin
-     //   fifo_buffer[i] <= 0;
-     // end
         write_ptr <= 3'b000;
         read_ptr <= 3'b000;
+        read_write <= 4'b0000;
     end
     else begin
       if (do_read)begin
