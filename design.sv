@@ -3,48 +3,53 @@
 // ------DUT-------
 
 module fifo(
-  input             clk,
-  input             rst,
-  input             read_en,
-  input             write_en,
-  input [31:0]      data_in,
-  output            empty_fifo,                     // Active low signal
-  output            full_fifo,                      // Active low signal
-  output [31:0]     data_out
+  input                   clk,
+  input                   rst,
+  input                   read_en,
+  input                   write_en,
+  input   [WIDTH-1:0]     data_in,
+  output                  empty_fifo,                             // Active low signal
+  output                  full_fifo,                              // Active low signal
+  output  [WIDTH-1:0]     data_out
 );
   
-  reg [3:0]         write_ptr;
-  reg [3:0]         read_ptr;
-  reg               empty_fifo;
-  reg               full_fifo;
-  reg [31:0]        data_out;
+  parameter WIDTH = 32;
+  parameter DEPTH = 16;
+  parameter PTR_SIZE = 5;
+
+  reg [PTR_SIZE:0]       write_ptr;
+  reg [PTR_SIZE:0]       read_ptr;
+  reg                    empty_fifo;
+  reg                    full_fifo;
+  reg [WIDTH-1:0]        data_out;
   
-  reg [31:0]        fifo_buffer [7:0];          
+  reg [WIDTH-1:0]        fifo_buffer [DEPTH-1:0];          
   
   
-  wire [2:0]        write_pointer;
-  wire [2:0]        read_pointer;
-  wire              empty;
-  wire              full;
-  wire              do_read;
-  wire              do_write;
-  wire [3:0]        read_write; 				    // Prevents reads from empty FIFO, and stop writes to full FIFO
+  wire [PTR_SIZE-1:0]    write_pointer;                          // Pointer to write data to FIFO
+  wire [PTR_SIZE-1:0]    read_pointer;                           // Pointer to read data from FIFO
+  wire                   empty;
+  wire                   full;
+  wire                   do_read;
+  wire                   do_write;
+  wire [DEPTH:0]         read_write; 				                    // Prevents reads from empty FIFO, and stop writes to full FIFO
   
   
   assign read_write = write_ptr - read_ptr;
-  assign empty = (read_write == 4'b0000);
-  assign full = (read_write == 4'b1000);
-  assign write_pointer = write_ptr[2:0];		    // Pointer to write data to FIFO
-  assign read_pointer = read_ptr[2:0];			    // Pointer to read data from FIFO
+  assign empty = (read_write == 5'b00000);                        // Condition for empty FIFO
+  assign full = (read_write == 5'b10000);                         // Condition for full FIFO
+  assign write_pointer = write_ptr[PTR_SIZE-1:0];		              
+  assign read_pointer = read_ptr[PTR_SIZE-1:0];			              
   assign do_read = (read_en && empty == 1'b0);
   assign do_write = (write_en && full == 1'b0);
   
+  // FIFO read/write logic, increment pointer to update location
   
   always @ (posedge clk) begin
     if (rst)begin
-        write_ptr <= 3'b000;
-        read_ptr <= 3'b000;
-        read_write <= 4'b0000;
+        write_ptr <= 0;
+        read_ptr <= 0;
+        read_write <= 0;
     end
     else begin
       if (do_read)begin
@@ -57,6 +62,8 @@ module fifo(
     end
   end
   
+  // Assign Latches to read data and set empty/full FIFO
+
   always @ (read_pointer)begin
     data_out <= fifo_buffer[read_pointer-1];
   end
@@ -71,12 +78,12 @@ endmodule: fifo
 // -----INTERFACE------
 
 interface fifo_if;
-  logic             clk, 
-  logic             rst, 
-  logic             read_en, 
-  logic             write_en, 
-  logic [31:0]      data_in,
-  logic             empty_fifo,
-  logic             full_fifo,
-  logic [31:0]      data_out
+  bit                 clk, 
+  bit                 rst, 
+  logic               read_en, 
+  logic               write_en, 
+  logic [WIDTH-1:0]   data_in,
+  logic               empty_fifo,
+  logic               full_fifo,
+  logic [WIDTH-1:0]   data_out
 endinterface: fifo_if

@@ -12,28 +12,32 @@ class fifo_sequencer extends uvm_sequencer #(data_item);
 
 endclass: fifo_sequencer
 
-// ----SEQUENCE INSTANCES----
-// test1 : i)  write FIFO from empty -> full 
-//         ii) read FIFO from full -> empty 
-// test2 : i)  write FIFO from empty -> half-full 
-//         ii) read/write concurrently
-// reset : Toggles "rst"
+/* ----SEQUENCE INSTANCES----
+Non-Reset test-1 :  i)  write FIFO from empty -> full 
+                    ii) read FIFO from full -> empty 
 
+Non-Reset test2 :   i)  write FIFO from empty -> half-full 
+                    ii) read/write concurrently
+
+Reset test :    Toggles "rst"
+*/
 class fifo_seq_test1 extends uvm_sequence #(data_item);
     `uvm_object_utils(fifo_seq_test1)
   
   data_item seq;
+  int loop1 = 64;
+  int loop2 = 16;
   
   function new (string name = "fifo_seq_test1");
     super.new(name);
   endfunction: new
   
   task body();
-    for(int i = 0; i < 20; i++)begin
+    for(int i = 0; i < loop1; i++)begin
       seq = data_item::type_id::create("write_seq");
       start_item(seq);
 
-      if(i < 10)begin
+      if(i < loop2)begin
           if(!seq.randomize() with {seq.write_en == 1'b1; seq.read_en == 1'b0;})begin
               `uvm_error("Sequence", "Randomization failed for sequence ")
         end
@@ -54,17 +58,19 @@ class fifo_seq_test2 extends uvm_sequence #(data_item);
     `uvm_object_utils(fifo_seq_test2)
 
     data_item seq;
+    int loop1 = 64;
+    int loop2 = 8;
 
   function new (string name = "fifo_seq_test2");
     super.new(name);
   endfunction: new
 
   task body();
-    for(int i = 0; i < 40; i++)begin
+    for(int i = 0; i < loop1; i++)begin
       seq = data_item::type_id::create("read_seq");
       start_item(seq);
 
-      if(i < 4)begin
+      if(i < loop2)begin
           if(!seq.randomize() with {seq.write_en == 1'b1; seq.read_en == 1'b0;})begin
               `uvm_error("Sequence", "Randomization failed for sequence ")
         end

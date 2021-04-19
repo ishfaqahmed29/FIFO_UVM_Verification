@@ -33,6 +33,8 @@ class fifo_driver extends uvm_driver #(data_item)
           fifo_driver_vif.read_en = 1'b0;
           fifo_driver_vif.write_en = 1'b0;
           fifo_driver_vif.data_in = 31'b0;
+          fifo_driver_vif.empty_fifo = 1'b1;
+          fifo_driver_vif.full_fifo = 1'b1;
           fifo_driver_vif.data_out = 31'b0;
         end
     endtask: reset
@@ -41,26 +43,22 @@ class fifo_driver extends uvm_driver #(data_item)
       forever begin
         while(!fifo_driver_vif.rst)begin
           seq_item_port.get_next_item(req);
-          drive_pkts(req);
+          fifo_driver_vif.write_en = 1'b0;
+          fifo_driver_vif.read_en = 1'b0;
+          repeat(pkt.delay) @(posedge fifo_driver_vif.clk)
+          fifo_driver_vif.rst = pkt.rst;
+          fifo_driver_vif.read_en = pkt.read_en;
+          fifo_driver_vif.write_en = pkt.write_en;
+          fifo_driver_vif.data_in = pkt.data_in;
+          fifo_driver_vif.empty_fifo = pkt.empty_fifo;
+          fifo_driver_vif.full_fifo = pkt.full_fifo;
+          fifo_driver_vif.data_out = pkt.data_out;
+          @(posedge fifo_driver_vif.clk)
+          fifo_driver_vif.write_en = 1'b0;
+          fifo_driver_vif.read_en = 1'b0;      
           seq_item_port.item_done();
         end
       end
     endtask: driver_to_dut
-    
-    virtual task drive_pkts(data_item pkt);
-      fifo_driver_vif.write_en = 1'b0;
-      fifo_driver_vif.read_en = 1'b0;
-      repeat(pkt.delay) @(posedge fifo_driver_vif.clk)
-      fifo_driver_vif.rst = pkt.rst;
-      fifo_driver_vif.read_en = pkt.read_en;
-      fifo_driver_vif.write_en = pkt.write_en;
-      fifo_driver_vif.data_in = pkt.data_in;
-      fifo_driver_vif.empty_fifo = pkt.empty_fifo;
-      fifo_driver_vif.full_fifo = pkt.full_fifo;
-      fifo_driver_vif.data_out = pkt.data_out;
-      @(posedge fifo_driver_vif.clk)
-      fifo_driver_vif.write_en = 1'b0;
-      fifo_driver_vif.read_en = 1'b0;      
-    endtask: drive_pkts
 
 endclass: fifo_driver
