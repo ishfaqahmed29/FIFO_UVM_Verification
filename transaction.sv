@@ -18,7 +18,7 @@ class data_item extends uvm_sequence_item;
   
   `uvm_object_utils_begin(data_item)
     `uvm_field_int(rst, UVM_DEFAULT)
-  	`uvm_field_int(read_en, UVM_DEFAULT)
+    `uvm_field_int(read_en, UVM_DEFAULT)
   	`uvm_field_int(write_en, UVM_DEFAULT)
     `uvm_field_int(data_in, UVM_DEFAULT)
   	`uvm_field_int(empty_fifo, UVM_DEFAULT)

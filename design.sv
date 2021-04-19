@@ -26,18 +26,18 @@ module fifo(
   reg [WIDTH-1:0]        fifo_buffer [DEPTH-1:0];          
   
   
-  wire [PTR_SIZE-1:0]    write_pointer;                          // Pointer to write data to FIFO
-  wire [PTR_SIZE-1:0]    read_pointer;                           // Pointer to read data from FIFO
+  wire [PTR_SIZE-1:0]    write_pointer;                           // Pointer to write data to FIFO
+  wire [PTR_SIZE-1:0]    read_pointer;                            // Pointer to read data from FIFO
   wire                   empty;
   wire                   full;
   wire                   do_read;
   wire                   do_write;
-  wire [DEPTH:0]         read_write; 				                    // Prevents reads from empty FIFO, and stop writes to full FIFO
+  wire [DEPTH:0]         counter; 				                        // Prevents reads from empty FIFO, and stop writes to full FIFO
   
   
-  assign read_write = write_ptr - read_ptr;
-  assign empty = (read_write == 5'b00000);                        // Condition for empty FIFO
-  assign full = (read_write == 5'b10000);                         // Condition for full FIFO
+  assign counter = write_ptr - read_ptr;
+  assign empty = (counter == 5'b00000);                           // Condition for empty FIFO
+  assign full = (counter == 5'b10000);                            // Condition for full FIFO
   assign write_pointer = write_ptr[PTR_SIZE-1:0];		              
   assign read_pointer = read_ptr[PTR_SIZE-1:0];			              
   assign do_read = (read_en && empty == 1'b0);
@@ -49,7 +49,7 @@ module fifo(
     if (rst)begin
         write_ptr <= 0;
         read_ptr <= 0;
-        read_write <= 0;
+        counter <= 0;
     end
     else begin
       if (do_read)begin
@@ -62,7 +62,7 @@ module fifo(
     end
   end
   
-  // Assign Latches to read data and set empty/full FIFO
+  // Assign Latches to read data and set empty/full flags
 
   always @ (read_pointer)begin
     data_out <= fifo_buffer[read_pointer-1];

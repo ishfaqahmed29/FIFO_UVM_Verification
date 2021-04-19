@@ -16,7 +16,7 @@ endclass: fifo_sequencer
 Non-Reset test-1 :  i)  write FIFO from empty -> full 
                     ii) read FIFO from full -> empty 
 
-Non-Reset test2 :   i)  write FIFO from empty -> half-full 
+Non-Reset test-2 :  i)  write FIFO from empty -> half-full 
                     ii) read/write concurrently
 
 Reset test :    Toggles "rst"
@@ -25,7 +25,7 @@ class fifo_seq_test1 extends uvm_sequence #(data_item);
     `uvm_object_utils(fifo_seq_test1)
   
   data_item seq;
-  int loop1 = 64;
+  int loop1 = 66;
   int loop2 = 16;
   
   function new (string name = "fifo_seq_test1");
@@ -58,7 +58,7 @@ class fifo_seq_test2 extends uvm_sequence #(data_item);
     `uvm_object_utils(fifo_seq_test2)
 
     data_item seq;
-    int loop1 = 64;
+    int loop1 = 66;
     int loop2 = 8;
 
   function new (string name = "fifo_seq_test2");

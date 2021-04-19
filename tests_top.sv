@@ -53,3 +53,19 @@ class sample_test extends fifo_base_test;
     endtask: run_phase
 
 endclass: sample_test    
+
+
+class fifo_read_test extends fifo_base_test;
+    `uvm_component_utils(fifo_read_test)
+
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction: new
+
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+    endfunction: build_phase
+
+    
+
+endclass: fifo_read_test

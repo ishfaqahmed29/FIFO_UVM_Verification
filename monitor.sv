@@ -10,7 +10,7 @@ class fifo_monitor extends uvm_monitor;
     string monitor_intf;
     int num_pkts;
 
-    uvm_analysis_port #(data_item) pkt_collected_port;
+    uvm_analysis_port #(data_item) item_collected_port;
     data_item data_collected;
     data_item data_clone;
 
@@ -25,7 +25,7 @@ class fifo_monitor extends uvm_monitor;
 
         `uvm_info(get_type_name(), $sformatf("MONITOR INTERFACE USED = %0s", monitor_intf), UVM_LOW)
 
-        pkt_collected_port = new("pkt_collected_port", this);
+        item_collected_port = new("item_collected_port", this);
 
         data_collected = data_item::type_id::create("data_collected");
 
@@ -40,12 +40,15 @@ class fifo_monitor extends uvm_monitor;
 
     virtual task collect_data();
         forever begin
-            wait(vif.write_en & vif.full_fifo & !vif.rst)
+            @ (posedge vif.clk)
+            if(vif.write_en & vif.full_fifo & !vif.rst)begin
             data_collected.data_in = vif.data_in;
-            wait(vif.read_en & vif.empty_fifo & !vif.rst)
-            data_collected.data_out = vif.data_out;
+            end
+            if(vif.read_en & vif.empty_fifo & !vif.rst)begin
+            data_collected.data_out = vif.data_out;    
+            end
             $cast(data_clone, data_collected.clone());
-            pkt_collected_port.write(data_clone);
+            item_collected_port.write(data_clone);
             num_pkts++;
         end
     endtask: collect_data
