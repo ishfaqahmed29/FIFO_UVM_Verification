@@ -54,7 +54,7 @@ class fifo_monitor extends uvm_monitor;
     endtask: collect_data
 
     virtual function void report_phase(uvm_phase phase);
-        `uvm_info(get_type_name(), $sformatf("SUMMARY: PACKETS = %0d", num_pkts), UVM_LOW)
+        `uvm_info(get_type_name(), $sformatf("TOTAL PACKETS = %0d", num_pkts), UVM_LOW)
     endfunction: report_phase
 
 endclass: fifo_monitor

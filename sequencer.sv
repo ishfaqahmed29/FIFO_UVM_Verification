@@ -25,7 +25,7 @@ class fifo_seq_test1 extends uvm_sequence #(data_item);
     `uvm_object_utils(fifo_seq_test1)
   
   data_item seq;
-  int loop1 = 66;
+  int loop1 = 54;
   int loop2 = 16;
   
   function new (string name = "fifo_seq_test1");

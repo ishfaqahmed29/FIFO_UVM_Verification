@@ -32,7 +32,7 @@ module fifo(
   wire                   full;
   wire                   do_read;
   wire                   do_write;
-  wire [DEPTH:0]         counter; 				                        // Prevents reads from empty FIFO, and stop writes to full FIFO
+  wire [DEPTH:0]         counter; 				                        // Prevents read from empty FIFO, stops write to full FIFO
   
   
   assign counter = write_ptr - read_ptr;

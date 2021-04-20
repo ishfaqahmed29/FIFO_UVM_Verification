@@ -9,8 +9,8 @@ module top_tb;
   bit clk;
   bit rst;
   
-  fifo_if fifo_vif_input();
-  fifo_if fifo_vif_output();
+  fifo_if fifo_vif_input(.clk(clk), .rst(rst));
+  fifo_if fifo_vif_output(.clk(clk), .rst(rst));
   
   fifo fifo_dut( 
     .clk(clk),
@@ -24,16 +24,16 @@ module top_tb;
 );
   
   initial begin
-    fifo_vif_input.rst = 1'b1;
-    fifo_vif_input.clk = 1'b1;
+    rst = 1'b1;
+    clk = 1'b1;
     #35 rst = 1'b0;
   end
 
   always #5 clk = ~clk;
   
   initial begin
-    uvm_config_db#(virtual fifo_if)::set(uvm_root::get(), "*.agent.*", "input_intf", fifo_vif_input);
-    uvm_config_db#(virtual fifo_if)::set(uvm_root::get(), "*.monitor.*", "output_intf", fifo_vif_output);
+    uvm_config_db#(virtual fifo_if)::set(null, "uvm_test_top.agent.input_intf", "fifo_if", fifo_vif_input);
+    uvm_config_db#(virtual fifo_if)::set(null, "uvm_test_top.monitor.output_intf", "fifo_if", fifo_vif_output);
 
     run_test();
   end

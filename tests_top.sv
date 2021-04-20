@@ -55,8 +55,8 @@ class sample_test extends fifo_base_test;
 endclass: sample_test    
 
 
-class fifo_read_test extends fifo_base_test;
-    `uvm_component_utils(fifo_read_test)
+class fifo_reset_test extends fifo_base_test;
+    `uvm_component_utils(fifo_reset_test)
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -66,6 +66,14 @@ class fifo_read_test extends fifo_base_test;
         super.build_phase(phase);
     endfunction: build_phase
 
-    
+    virtual task run_phase(uvm_phase phase);
+        reset_sequence seq;
 
-endclass: fifo_read_test
+        super.run_phase(phase);
+        phase.raise_objection(this);
+        seq = reset_sequence::type_id::create("seq");
+        seq.start(env.penv_in.agent.sequencer);
+        phase.drop_objection(this);
+    endtask: run_phase
+
+endclass: fifo_reset_test

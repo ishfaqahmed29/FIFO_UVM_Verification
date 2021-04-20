@@ -80,8 +80,10 @@ class fifo_env extends uvm_env;
     endfunction: build_phase
 
     function void connect_phase(uvm_phase phase);
-        fifo_in_env.agent.monitor.pkt_collected_port.connect();
-        fifo_out_env.agent.monitor.pkt_collected_port.connect();
+        super.connect_phase(phase);
+        fifo_agent.custom_ap.connect(fifo_coverage.analysis_export);
+        fifo_in_env.agent.monitor.item_collected_port.connect();
+        fifo_out_env.agent.monitor.item_collected_port.connect();
         `uvm_info(get_full_name(), "Connect stage done! ", UVM_LOW)
     endfunction: connect_phase
 
