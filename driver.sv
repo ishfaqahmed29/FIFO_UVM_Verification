@@ -39,7 +39,7 @@ class fifo_driver extends uvm_driver #(data_item)
         end
     endtask: check_reset
     
-    virtual task driver_to_dut();
+      virtual task driver_to_dut(data_item pkt);
       forever begin
         while(!fifo_driver_vif.rst)begin
           seq_item_port.get_next_item(req);
