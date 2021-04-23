@@ -48,7 +48,7 @@ class sample_test extends fifo_base_test;
         super.run_phase(phase);
         phase.raise_objection(this);
         seq = fifo_seq_test1::type_id::create("seq");
-        seq.start(env.penv_in.agent.sequencer);
+        seq.start(env.fifo_in_env.agent.sequencer);
         phase.drop_objection(this);
     endtask: run_phase
 
@@ -72,7 +72,7 @@ class fifo_reset_test extends fifo_base_test;
         super.run_phase(phase);
         phase.raise_objection(this);
         seq = fifo_seq_reset::type_id::create("seq");
-        seq.start(env.penv_in.agent.sequencer);
+        seq.start(env.fifo_out_env.agent.sequencer);
         phase.drop_objection(this);
     endtask: run_phase
 
