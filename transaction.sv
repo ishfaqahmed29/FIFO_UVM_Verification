@@ -4,7 +4,7 @@ import uvm_pkg::*;
 // ----DATA TRANSACTION----
 
 class data_item extends uvm_sequence_item;
-  rand logic            rst;
+  bit            rst;
   rand logic 		        read_en;
   rand logic 		        write_en;
   rand logic [31:0]     data_in;
