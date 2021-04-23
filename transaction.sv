@@ -4,6 +4,7 @@ import uvm_pkg::*;
 // ----DATA TRANSACTION----
 
 class data_item extends uvm_sequence_item;
+  rand logic            rst;
   rand logic 		        read_en;
   rand logic 		        write_en;
   rand logic [31:0]     data_in;
@@ -16,6 +17,7 @@ class data_item extends uvm_sequence_item;
   endfunction: new
   
   `uvm_object_utils_begin(data_item)
+    `uvm_field_int(rst, UVM_DEFAULT)
     `uvm_field_int(read_en, UVM_DEFAULT)
   	`uvm_field_int(write_en, UVM_DEFAULT)
     `uvm_field_int(data_in, UVM_DEFAULT)
