@@ -43,7 +43,7 @@ class sample_test extends fifo_base_test;
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
-        random_sequence seq;
+        fifo_seq_test1 seq;
 
         super.run_phase(phase);
         phase.raise_objection(this);
@@ -67,7 +67,7 @@ class fifo_reset_test extends fifo_base_test;
     endfunction: build_phase
 
     virtual task run_phase(uvm_phase phase);
-        reset_sequence seq;
+        fifo_seq_reset seq;
 
         super.run_phase(phase);
         phase.raise_objection(this);
