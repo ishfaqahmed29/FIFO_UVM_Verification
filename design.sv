@@ -28,17 +28,16 @@ module fifo(
   
   wire  [CTR_SIZE-1:0]  write_pointer;      // Pointer to write data to FIFO
   wire  [CTR_SIZE-1:0]  read_pointer;       // Pointer to read data from FIFO
-  wire                  empty;
-  wire                  full;
-  wire  [DEPTH:0]       counter;                               
+  wire                  empty;              // Condition for EMPTY_FIFO
+  wire                  full;               // Condition for FULL_FIFO                               
   wire                  read_ready;         // Prevents read from empty FIFO
   wire                  write_ready;        // Prevents write to full FIFO
+  wire  [DEPTH:0]       counter;
   
-
   
   assign counter = write_addr_reg - read_addr_reg;
-  assign empty = (counter == 5'b00000 || read_addr_reg + 1 == write_addr_reg);      // Condition for EMPTY_FIFO
-  assign full = (counter == 5'b10000 || write_addr_reg + 1 == read_addr_reg);       // Condition for FULL_FIFO
+  assign empty = (counter == 5'b00000 || read_addr_reg + 1 == write_addr_reg);      
+  assign full = (counter == 5'b10000 || write_addr_reg + 1 == read_addr_reg);       
   assign write_pointer = write_addr_reg[CTR_SIZE-1:0];		              
   assign read_pointer = read_addr_reg[CTR_SIZE-1:0];
   assign read_ready = (read_en && empty == 1'b0);
