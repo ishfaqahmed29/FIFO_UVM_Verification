@@ -12,7 +12,6 @@ class fifo_monitor extends uvm_monitor;
 
     uvm_analysis_port #(data_item) item_collected_port;
     data_item data_collected;
-    data_item data_clone;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -20,8 +19,8 @@ class fifo_monitor extends uvm_monitor;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-            if(!uvm_config_db#(virtual fifo_if)::get(this, "", monitor_intf, vif))
-        `uvm_fatal("NOVIF", {"Set virtual interface for: ", get_full_name(), ".vif"})
+        if (!uvm_config_db#(virtual fifo_if)::get(this, "", monitor_intf, vif))
+        `uvm_fatal("NO_VIF", {"Set virtual interface for: ", get_full_name(), ".vif"})
 
         `uvm_info(get_type_name(), $sformatf("MONITOR INTERFACE USED = %0s", monitor_intf), UVM_LOW)
 
@@ -41,14 +40,13 @@ class fifo_monitor extends uvm_monitor;
     virtual task collect_data();
         forever begin
             @ (posedge vif.clk)
-            if(vif.write_en & vif.full_fifo & !vif.rst)begin
+            if(vif.write_en & vif.full_fifo & !vif.rst_n)begin
             data_collected.data_in = vif.data_in;
             end
-            if(vif.read_en & vif.empty_fifo & !vif.rst)begin
+            if(vif.read_en & vif.empty_fifo & !vif.rst_n)begin
             data_collected.data_out = vif.data_out;    
             end
-            $cast(data_clone, data_collected.clone());
-            item_collected_port.write(data_clone);
+            item_collected_port.write(data_collected);
             num_pkts++;
         end
     endtask: collect_data

@@ -35,12 +35,13 @@ class fifo_scoreboard extends uvm_scoreboard;
             result = input_data.compare(output_data);
             if(result)
                 $display("RESULTS COMPARED SUCCESSFULLY! ");
-            else
+            else begin
                 `uvm_error("COMPARE", "RESULTS DID NOT MATCH! ")
                 $display("Expected data: ");
                 input_data.print();
                 $display("Actual data: ");
                 output_data.print();
+            end
         end
     endtask: run_phase
 

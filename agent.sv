@@ -18,7 +18,7 @@ class fifo_agent extends uvm_agent;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if(is_active == UVM_ACTIVE)begin
+        if (is_active == UVM_ACTIVE) begin
         sequencer = fifo_sequencer::type_id::create("sequencer", this);
         driver = fifo_driver::type_id::create("driver", this);            
         end
@@ -27,7 +27,7 @@ class fifo_agent extends uvm_agent;
 
 
     function void connect_phase(uvm_phase phase);
-        if(is_active == UVM_ACTIVE)
+        if (is_active == UVM_ACTIVE)
         driver.seq_item_port.connect(sequencer.seq_item_export);
         `uvm_info(get_full_name(), "Driver connected to sequencer! ", UVM_LOW)
     endfunction: connect_phase

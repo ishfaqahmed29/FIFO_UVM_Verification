@@ -17,7 +17,7 @@ class fifo_base_test extends uvm_test;
         super.build_phase(phase);
         env = fifo_env::type_id::create("env", this);
         printer = new();
-        printer.knobs.depth = 6;
+        printer.knobs.depth = 4;
     endfunction: build_phase
 
     function void end_of_elaboration_phase(uvm_phase phase);

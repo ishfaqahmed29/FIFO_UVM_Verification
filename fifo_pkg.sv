@@ -1,6 +1,3 @@
-`ifndef FIFO_PKG__SV
-`define FIFO_PKG__SV
-
 package fifo_pkg;
 
 	import uvm_pkg::*;

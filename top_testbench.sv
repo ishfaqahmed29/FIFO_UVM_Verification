@@ -7,14 +7,14 @@ module top_tb;
   import fifo_pkg::*;
   
   bit clk;
-  bit rst;
+  bit rst_n;
   
-  fifo_if fifo_vif_input(.clk(clk), .rst(rst));
-  fifo_if fifo_vif_output(.clk(clk), .rst(rst));
+  fifo_if fifo_vif_input(.clk(clk), .rst_n(rst_n));
+  fifo_if fifo_vif_output(.clk(clk), .rst_n(rst_n));
   
   fifo fifo_dut( 
     .clk(clk),
-    .rst(rst),
+    .rst_n(rst_n),
     .read_en(fifo_vif_input.read_en),
     .write_en(fifo_vif_input.write_en),
     .data_in(fifo_vif_input.data_in),
@@ -24,9 +24,9 @@ module top_tb;
 );
   
   initial begin
-    rst = 1'b1;
+    rst_n = 1'b0;
     clk = 1'b1;
-    #35 rst = 1'b0;
+    #35 rst_n = 1'b1;
   end
 
   always #5 clk = ~clk;
