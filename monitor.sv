@@ -28,8 +28,6 @@ class fifo_monitor extends uvm_monitor;
 
         data_collected = data_item::type_id::create("data_collected");
 
-        data_clone = data_item::type_id::create("data_clone");
-    
         `uvm_info(get_full_name(), "Build stage complete ", UVM_LOW)
     endfunction: build_phase
 
