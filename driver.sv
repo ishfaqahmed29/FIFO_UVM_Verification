@@ -33,6 +33,7 @@ class fifo_driver extends uvm_driver #(data_item)
           fifo_driver_vif.read_en = 1'b0;
           fifo_driver_vif.write_en = 1'b0;
           fifo_driver_vif.data_in = 32'b0;
+          fifo_driver_vif.data_out = 32'b0;
         end
     endtask: check_reset
     
@@ -46,6 +47,7 @@ class fifo_driver extends uvm_driver #(data_item)
           fifo_driver_vif.read_en = pkt.read_en;
           fifo_driver_vif.write_en = pkt.write_en;
           fifo_driver_vif.data_in = pkt.data_in;
+          fifo_driver_vif.data_out = pkt.data_out;
           @(posedge fifo_driver_vif.clk)
           fifo_driver_vif.write_en = 1'b0;
           fifo_driver_vif.read_en = 1'b0;      
